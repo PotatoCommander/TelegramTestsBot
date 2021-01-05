@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Net.Mime;
 using  Telegram;
 using Telegram.Bot;
 using Telegram.Bot.Args;
+using Telegram.Bot.Types.ReplyMarkups;
+using  Telegram.Bot.Types;
 
 namespace Tg
 {
@@ -21,7 +24,20 @@ namespace Tg
 
         private static async void MessageGet(object sender, MessageEventArgs e)
         {
-            await bot.SendTextMessageAsync(e.Message.Chat,"Hello world!").ConfigureAwait(false);
+            var inlineKeyboard = new InlineKeyboardMarkup(new []
+            {
+                new []
+                {
+                    InlineKeyboardButton.WithCallbackData("hihi"),
+                    InlineKeyboardButton.WithCallbackData("Dick")
+                },
+                new []
+                {
+                    InlineKeyboardButton.WithUrl("hui", "https://core.telegram.org/bots/api#inlinekeyboardmarkup"), 
+                    InlineKeyboardButton.WithCallbackData("iiiii")
+                }
+            });
+            await bot.SendTextMessageAsync(e.Message.Chat,"Hello world!",replyMarkup:inlineKeyboard).ConfigureAwait(false);
         }
     }
 }
