@@ -7,8 +7,6 @@ namespace Tg
         static void Main(string[] args)
         {
             Console.WriteLine("Hello World!");
-            //how?what?
-            //i
         }
     }
 }
