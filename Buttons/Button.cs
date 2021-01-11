@@ -14,18 +14,16 @@ namespace Tg.Buttons
     {
         public override string text { get; set; }
         public override string buttonCallbackData { get; set; }
-        public override Menu _menuToDisplay { get; set; } = null;
+        public override Menu _menuToDisplay { get; set; }
 
-        public Button(string text, string callbackData, Menu menu = null)
+        public Button(string buttonText, string callbackData, Menu menu = null)
         {
-            text = text;
+            text = buttonText;
             buttonCallbackData = callbackData;
             _menuToDisplay = menu;
         }
         public override async void Execute(Chat chat, ITelegramBotClient bot)
         {
-            //TODO:
-            //display menu
             if (_menuToDisplay!=null)
             {
                 _menuToDisplay.DisplayMenu(chat, bot);
@@ -34,7 +32,7 @@ namespace Tg.Buttons
 
         public override InlineKeyboardButton GetButton()
         {
-            throw new NotImplementedException();
+            return InlineKeyboardButton.WithCallbackData(text, buttonCallbackData);
         }
  
     }

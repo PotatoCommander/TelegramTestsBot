@@ -16,11 +16,13 @@ namespace Tg.Menus
         private List<TelegramButton> _buttons;
         public string text { get; set; }
         public string name { get; set; }
-        public Menu(string menuName, string menuText, List<TelegramButton> buttons)
+        public Menu(string menuName, string menuText, List<TelegramButton> buttons = null)
         {
             name = menuName;
             text = menuText;
-            _buttons = buttons;
+            if (buttons==null) { _buttons = new List<TelegramButton>();}
+            else { _buttons = buttons; }
+            
         }
         public List<string> GetCallbacksOfMenu()
         {
@@ -31,10 +33,30 @@ namespace Tg.Menus
             }
             return callbacks;
         }
+        public void AddButton(string buttonText, string buttonCallback, Menu displayTo)
+        {
+            _buttons.Add(new Button(buttonText, buttonCallback, displayTo));
+        }
+        private InlineKeyboardMarkup CreateMarkup()
+        {
+            List<InlineKeyboardButton> markupButtons = new List<InlineKeyboardButton>();
+            foreach (var button in _buttons)
+            {
+                markupButtons.Add(button.GetButton());
+            }
+            return new InlineKeyboardMarkup(markupButtons);
+        }
+        public  void ClickOnButton(CallbackQuery callback, ITelegramBotClient bot)
+        {
+            foreach (var button in _buttons)
+            {
+                if (callback.Data == button.buttonCallbackData) button.Execute(callback.Message.Chat,bot);
+            }
+        }
         public async void DisplayMenu(Chat chat, ITelegramBotClient bot)
         {
             await bot.SendTextMessageAsync(chat , text,
-                           replyMarkup: menu).ConfigureAwait(false);
+                           replyMarkup: CreateMarkup()).ConfigureAwait(false);
         }
     }
 }

@@ -15,32 +15,22 @@ namespace Tg.Services
     {
         //adding removing buttons/menus executing by callback data
         private static List<Menu> _allMenus = new List<Menu>();
-        private static List<TelegramButton> _allButtons = new List<TelegramButton>();
-        public static void CreateMenu(string name, string text, List<TelegramButton> buttons = null)
+        private static Menu currentMenu = new Menu("","");
+        public static void AddMenuToService(Menu menu)
         {
-            _allMenus.Add(new Menu(name, text, buttons));
-            if (buttons != null)
+            _allMenus.Add(menu);
+        }
+        //creating buttons
+        public static void ConnectTo(Menu origin, List<Menu> connectTo)
+        {
+            foreach (var menu in connectTo)
             {
-                _allButtons = (List<TelegramButton>)_allButtons.Union(buttons);
+                origin.AddButton(menu.name, menu.name, menu);
             }
         }
-        public static void AddButtonTo(string menuName, string buttonText,string buttonCallback, Menu displayTo = null)
+        public static void ButtonOnClick(CallbackQuery callback, ITelegramBotClient bot)
         {
-
-        }
-        public static void RemoveButtonFrom()
-        { }
-        public static void RemoveMenu()
-        { }
-        public static void ButtonExecute(CallbackQuery callback, ITelegramBotClient bot)
-        { 
-            foreach (var button in _allButtons)
-            {
-                if (button.buttonCallbackData == callback.Data)
-                {
-                    button.Execute(callback.Message.Chat, bot);
-                }
-            }
+            currentMenu.ClickOnButton(callback, bot);
         }
         public static void MenuDisplayByCommand(string name, Chat chat, ITelegramBotClient bot)
         {
@@ -49,6 +39,7 @@ namespace Tg.Services
                 if (menu.name == name)
                 {
                     menu.DisplayMenu(chat, bot);
+                    currentMenu = menu;
                 }
             }
         }

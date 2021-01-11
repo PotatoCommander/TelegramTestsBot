@@ -7,6 +7,7 @@ using Telegram.Bot.Types.ReplyMarkups;
 using Tg.Abstractions;
 using Tg.Buttons;
 using Tg.Services;
+using Tg.Menus;
 
 namespace Tg
 {
@@ -18,9 +19,13 @@ namespace Tg
         {
             bot = new TelegramBotClient("1509037801:AAHSgqj_Xxt5Snksb3e25gy6TOBS4C_wxwM") { Timeout = TimeSpan.FromSeconds(10) };
             var info = bot.GetMeAsync().Result;
-            DisplayService.CreateMenu("main", "ГЛАВНОЕ МЕНЮ");
-            DisplayService.CreateMenu("test1", "PIPIPUPU WHATS UP BRO?");
-            DisplayService.CreateMenu("test2", "Второе меню");
+            var mainMenu = new Menu("main", "Главное меню :)");
+            var test1Menu = new Menu("test1", "тестовое меню 1");
+            var test2Menu = new Menu("test2", "тестовое меню 2");
+            DisplayService.AddMenuToService(mainMenu);
+            DisplayService.AddMenuToService(test1Menu);
+            DisplayService.AddMenuToService(test2Menu);
+            DisplayService.ConnectTo(mainMenu, new List<Menu> { test1Menu, test2Menu});
 
 
             bot.OnMessage += MessageGet;
@@ -37,7 +42,7 @@ namespace Tg
         }
         private static async void Callback(object sender, CallbackQueryEventArgs ev)
         {
-        
+            DisplayService.ButtonOnClick(ev.CallbackQuery, bot);
         }
         private static  InlineKeyboardMarkup CreateMarkup(List<TelegramButton> buttons)
         {
