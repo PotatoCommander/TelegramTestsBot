@@ -34,6 +34,6 @@ namespace Tg.Buttons
         {
             return InlineKeyboardButton.WithCallbackData(text, buttonCallbackData);
         }
- 
+
     }
 }

@@ -16,13 +16,16 @@ namespace Tg.Menus
         private List<TelegramButton> _buttons;
         public string text { get; set; }
         public string name { get; set; }
-        public Menu(string menuName, string menuText, List<TelegramButton> buttons = null)
+        public string picUrl { get; set; }
+        public Menu(string menuName, string menuText, string pictureUrl = null, List<TelegramButton> buttons = null)
         {
             name = menuName;
             text = menuText;
-            if (buttons==null) { _buttons = new List<TelegramButton>();}
+            _buttons = buttons;
+            picUrl = pictureUrl;
+            if (buttons == null) { _buttons = new List<TelegramButton>(); }
             else { _buttons = buttons; }
-            
+
         }
         public List<string> GetCallbacksOfMenu()
         {
@@ -55,6 +58,10 @@ namespace Tg.Menus
         }
         public async void DisplayMenu(Chat chat, ITelegramBotClient bot)
         {
+            if (picUrl != null)
+            {
+                await bot.SendPhotoAsync(chat.Id, picUrl);
+            }
             await bot.SendTextMessageAsync(chat , text,
                            replyMarkup: CreateMarkup()).ConfigureAwait(false);
         }

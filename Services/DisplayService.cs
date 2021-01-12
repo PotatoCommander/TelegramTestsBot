@@ -15,10 +15,13 @@ namespace Tg.Services
     {
         //adding removing buttons/menus executing by callback data
         private static List<Menu> _allMenus = new List<Menu>();
-        private static Menu currentMenu = new Menu("","");
-        public static void AddMenuToService(Menu menu)
+        private static Menu currentMenu = new Menu("", "");
+        public static void AddMenuToService(List<Menu> menus)
         {
-            _allMenus.Add(menu);
+            foreach (var menu in menus)
+            {
+                _allMenus.Add(menu);
+            }
         }
         //creating buttons
         public static void ConnectTo(Menu origin, List<Menu> connectTo)
@@ -30,6 +33,14 @@ namespace Tg.Services
         }
         public static void ButtonOnClick(CallbackQuery callback, ITelegramBotClient bot)
         {
+            foreach (var menu in _allMenus)
+            {
+                if (menu.name == callback.Data)
+                {
+                    menu.DisplayMenu(callback.Message.Chat, bot);
+                    currentMenu = menu;
+                }
+            }
             currentMenu.ClickOnButton(callback, bot);
         }
         public static void MenuDisplayByCommand(string name, Chat chat, ITelegramBotClient bot)
