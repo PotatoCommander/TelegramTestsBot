@@ -23,14 +23,8 @@ namespace Tg
             var info = bot.GetMeAsync().Result;
 
             DisplayBotService botService = new DisplayBotService(bot);
-            var mainMenu = new Menu("Вас приветствует шиза-бот!:)", shortName: "main");
-            var testListMenu = new Menu($"Тут типа список: \n Введи номер теста!",shortName:"Тесты",
-                quizInitPage:true);
-            var usefulOptionsMenu= new Menu("Список команд или кнопок хз короче ченить прикручу",shortName:"Другие опции");
-            botService.AddMenuToService(new List<Menu>(){mainMenu,testListMenu,usefulOptionsMenu});
-            botService.ConnectTo(mainMenu,new List<Menu>(){testListMenu,usefulOptionsMenu});
-
-            Quiz newQuiz = new Quiz("тестик на еблана","здесь ты узнаешь ебанько ты или нет",
+            
+            Quiz newQuiz1 = new Quiz("тестик на еблана", "здесь ты узнаешь ебанько ты или нет",
                 new List<Menu>()
                 {
                     new Menu("тебя били по голове?", buttons: new List<Button>()
@@ -49,7 +43,91 @@ namespace Tg
                         new Button("NO",weight:0)
                     })});
 
-            botService.AddTest(newQuiz);
+            Quiz newQuiz2 = new Quiz("Фанни инглиш", "Проверь свой уровень английского",
+                new List<Menu>()
+                {
+                    new Menu("I .... Spanish with my sister.", buttons: new List<Button>()
+                    {
+                        new Button("Study", weight:1),
+                        new Button("Studies",weight:0)
+                    }),
+                    new Menu("My sister .... a shower every morning.", buttons: new List<Button>()
+                    {
+                        new Button("Take", weight:0),
+                        new Button("Takes",weight:1)
+                    }), 
+                    new Menu("This house .... to my grandmother.", buttons: new List<Button>()
+                    {
+                        new Button("Belong", weight:0),
+                        new Button("Belongs",weight:1)
+                    }),
+                    new Menu("Ann .... apples.", buttons: new List<Button>()
+                    {
+                        new Button("Doesn't likes", weight:0),
+                        new Button("Don't likes",weight:0),
+                        new Button("Doesn't like",weight:1)
+                    }),
+                    new Menu("We .... to buy new furniture.", buttons: new List<Button>()
+                    {
+                        new Button("Don't want", weight:1),
+                        new Button("Don't wants",weight:0),
+                        new Button("Doesn't want", weight:0)
+                    }),
+                    new Menu("My friend and I .... Italian.", buttons: new List<Button>()
+                    {
+                        new Button("Does not speak", weight:0),
+                        new Button("Don't speak",weight:1),
+                        new Button("Do not speaks",weight:0)
+                    }),
+                    new Menu("(Jane / to cook) well?\n" +
+                             "1.Does Jane cook well?\n" +
+                             "2.Jane cook well?\n" +
+                             "3.Jane does cook well?", buttons: new List<Button>()
+                    {
+                        new Button("1", weight:1),
+                        new Button("2",weight:0),
+                        new Button("3", weight:0)
+                    }),
+                    new Menu("(you / to do) exercises every morning?\n" +
+                             "1.Do you exercises every morning?\n" +
+                             "2.Do you do exercises every morning?\n" +
+                             "3.Does you do exercises every morning?", buttons: new List<Button>()
+                    {
+                        new Button("1"),
+                        new Button("2",weight:1),
+                        new Button("3")
+                    }),
+                    new Menu("What (you / to have) for breakfast?\n" +
+                             "1.What have you for breakfast?\n" +
+                             "2.What do you has for breakfast?\n" +
+                             "3.What do you have for breakfast?", buttons: new List<Button>()
+                    {
+                        new Button("1"),
+                        new Button("2"),
+                        new Button("3",weight:1)
+                    }),
+                    new Menu("It's a nice day today. You (not to need) your umbrella.\n" +
+                             "1.It's a nice day today. You need your umbrella.\n" +
+                             "2.It's a nice day today. You doesn't need your umbrella.\n" +
+                             "3.It's a nice day today. You don't need your umbrella.", buttons: new List<Button>()
+                    {
+                        new Button("1"),
+                        new Button("2"),
+                        new Button("3",weight:1)
+                    })
+                });
+            botService.AddTest(newQuiz1);
+            botService.AddTest(newQuiz2);
+
+            var mainMenu = new Menu("Вас приветствует шиза-бот!:)", shortName: "main");
+            var testListMenu = new Menu($"Список тестов:\n{botService.GetQuizzes()}  \n Введи номер теста!",shortName:"Тесты",
+                quizInitPage:true);
+            var usefulOptionsMenu= new Menu("Список команд или кнопок хз короче ченить прикручу",shortName:"Другие опции");
+
+            botService.AddMenuToService(new List<Menu>(){mainMenu,testListMenu,usefulOptionsMenu});
+            botService.ConnectTo(mainMenu,new List<Menu>(){testListMenu,usefulOptionsMenu});
+
+
 
 
 

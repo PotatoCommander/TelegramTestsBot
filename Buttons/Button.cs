@@ -15,14 +15,14 @@ namespace Tg.Buttons
         public string text { get; set; }
         public string buttonCallbackData { get; set; }
         [JsonIgnore] public Menu _menuToDisplay { get; set; }
-        public int? _answerWeight;
+        public int _answerWeight;
 
-        public Button(string buttonText, string callbackData = "empty", Menu menu = null, int? weight = null)
+        public Button(string buttonText, string callbackData = "empty", Menu menu = null, int weight = 0)
         {
             text = buttonText;
             buttonCallbackData = callbackData;
             _menuToDisplay = menu;
-            _answerWeight = null;
+            _answerWeight = weight;
         }
 
         public async void Execute(Chat chat, ITelegramBotClient bot)

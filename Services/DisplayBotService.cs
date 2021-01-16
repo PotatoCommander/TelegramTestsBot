@@ -65,7 +65,7 @@ namespace Tg.Services
 
         public void MessageOnGet(object sender, MessageEventArgs ev)
         {
-            if (ev.Message.Text.ToLowerInvariant() == "start")
+            if (ev.Message.Text.ToLowerInvariant() == "/start")
             {
                 _allMenus[0].DisplayMenu(ev.Message.Chat, _bot);
                 _currentMenu = _allMenus[0];
@@ -76,6 +76,7 @@ namespace Tg.Services
                 var n = 0;
                 if (int.TryParse(ev.Message.Text, out n))
                 {
+                    n -= 1;
                     if (n < 0 || n >= _allTests.Count)
                         _bot.SendTextMessageAsync(ev.Message.Chat.Id,
                             "Неверно ввел сука, давай еще раз").ConfigureAwait(false);

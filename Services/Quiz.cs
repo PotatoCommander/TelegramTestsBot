@@ -8,6 +8,7 @@ using Tg.Buttons;
 using Tg.Services;
 using Tg.Menus;
 using System.IO;
+using System.Linq;
 using Telegram.Bot.Types.InputFiles;
 using Newtonsoft.Json;
 
@@ -16,7 +17,7 @@ namespace Tg.Services
     public class Quiz
     {
         public string _quizName;
-        internal int? result { get; set; }
+        internal int result { get; set; } = 0;
         internal int current = 0;
 
         private Menu _menuFrom;
@@ -28,6 +29,7 @@ namespace Tg.Services
         public List<Menu> questionMenus { get; set; }
         public Quiz(string quizName, string quizDefinition, List<Menu> questions)
         {
+            result = 0;
             _quizName = quizName;
             _quizDefinition = quizDefinition;
             questionMenus = new List<Menu>();
@@ -35,24 +37,26 @@ namespace Tg.Services
                 shortName: quizName,
                 buttons: new List<Button>() { new Button("Начать тест!", null) }));
             questionMenus.AddRange(questions);
-            Menu enMenu = new Menu("Ну типа конец", buttons: new List<Button>()
+
+            var endMenu = new Menu("", buttons: new List<Button>()
             {
-                new Button("к списку!", menu:_menuFrom)
+                new Button("к списку!")
             });
-            questionMenus.Add(enMenu);
+            questionMenus.Add(endMenu);
+
             for (var i = 1; i < questionMenus.Count; i++)
             {
                 foreach (var answer in questionMenus[i - 1].buttons)
                 {
                     answer._menuToDisplay = questionMenus[i];
-                    answer.buttonCallbackData = questionMenus[i].menuIdentifier;
+                    answer.buttonCallbackData = Guid.NewGuid().ToString();
                 }
             }
-
-            questionMenus[^1].buttons[0]._menuToDisplay = _menuFrom;
         }
         public void Start(Menu menuFrom, ITelegramBotClient bot, DisplayBotService botService, Chat chat)
         {
+            current = 0;
+            result = 0;
             botStarter = bot;
             _menuFrom = menuFrom;
             starter = botService;
@@ -61,29 +65,39 @@ namespace Tg.Services
             bot.OnCallbackQuery -= starter.ButtonOnClick;
             bot.OnCallbackQuery += QuizButtonClickHandler;
 
+            questionMenus.Last().buttons[0]._menuToDisplay = _menuFrom;
+
+
         }
 
         public void QuizButtonClickHandler(object sender, CallbackQueryEventArgs ev)
         {
-            if (current == questionMenus.Count-1)
+            if (starter._currentMenu.Equals(questionMenus.Last())) 
             {
                 botStarter.OnCallbackQuery -= QuizButtonClickHandler;
                 botStarter.OnCallbackQuery += starter.ButtonOnClick;
-                var res = result.ToString();
-                botStarter.SendTextMessageAsync(ev.CallbackQuery.Message.Chat.Id,
-                    res).ConfigureAwait(false);
-                starter._currentMenu = _menuFrom;
-                _menuFrom.DisplayMenu(ev.CallbackQuery.Message.Chat,botStarter);
-                return;
+
+
+                //var endMenu = new Menu("", buttons: new List<Button>()
+                //{
+                //    new Button("к списку!", _menuFrom.menuIdentifier,_menuFrom)
+                //});
+                //starter._currentMenu = endMenu;
+                //endMenu.DisplayMenu(ev.CallbackQuery.Message.Chat, botStarter);
+                //return;
             }
             foreach (var answer in starter._currentMenu.buttons )
             {
                 if (ev.CallbackQuery.Data == answer.buttonCallbackData)
                 {
+                    result += answer._answerWeight;
+                    if (answer._menuToDisplay.Equals(questionMenus.Last()))
+                    {
+                        questionMenus.Last().text = $"Конец теста:\n Ваш результат: {result.ToString()}";
+                    }
                     answer.Execute(ev.CallbackQuery.Message.Chat, botStarter);
                     starter._currentMenu = answer._menuToDisplay;
                     current++;
-                    result += answer._answerWeight;
                     break;
                 }
             }
