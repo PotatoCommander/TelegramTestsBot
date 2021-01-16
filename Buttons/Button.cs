@@ -4,33 +4,33 @@ using System.Text;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.ReplyMarkups;
-using Tg.Abstractions;
 using Tg.Menus;
+using Newtonsoft.Json;
 
 
 namespace Tg.Buttons
 {
-    public class Button : TelegramButton
+    public class Button
     {
-        public override string text { get; set; }
-        public override string buttonCallbackData { get; set; }
-        public override Menu _menuToDisplay { get; set; }
+        public string text { get; set; }
+        public string buttonCallbackData { get; set; }
+        [JsonIgnore] public Menu _menuToDisplay { get; set; }
+        public int? _answerWeight;
 
-        public Button(string buttonText, string callbackData, Menu menu = null)
+        public Button(string buttonText, string callbackData = "empty", Menu menu = null, int? weight = null)
         {
             text = buttonText;
             buttonCallbackData = callbackData;
             _menuToDisplay = menu;
-        }
-        public override async void Execute(Chat chat, ITelegramBotClient bot)
-        {
-            if (_menuToDisplay!=null)
-            {
-                _menuToDisplay.DisplayMenu(chat, bot);
-            }
+            _answerWeight = null;
         }
 
-        public override InlineKeyboardButton GetButton()
+        public async void Execute(Chat chat, ITelegramBotClient bot)
+        {
+            _menuToDisplay?.DisplayMenu(chat, bot);
+        }
+
+        public InlineKeyboardButton GetButton()
         {
             return InlineKeyboardButton.WithCallbackData(text, buttonCallbackData);
         }
