@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.ReplyMarkups;
@@ -12,17 +10,19 @@ namespace Tg.Buttons
 {
     public class Button
     {
-        public string text { get; set; }
-        public string buttonCallbackData { get; set; }
-        [JsonIgnore] public Menu _menuToDisplay { get; set; }
-        public int _answerWeight;
+        [JsonProperty] internal int AnswerWeight;
+        [JsonProperty] internal string Text { get; set; }
 
-        public Button(string buttonText, string callbackData = "empty", Menu menu = null, int weight = 0)
+
+        internal string buttonCallbackData { get; private set; }
+        internal Menu _menuToDisplay { get; set; }
+
+        public Button(string buttonText, Menu menu = null, int weight = 0)
         {
-            text = buttonText;
-            buttonCallbackData = callbackData;
+            Text = buttonText;
+            buttonCallbackData = Guid.NewGuid().ToString(); 
             _menuToDisplay = menu;
-            _answerWeight = weight;
+            AnswerWeight = weight;
         }
 
         public async void Execute(Chat chat, ITelegramBotClient bot)
@@ -32,7 +32,7 @@ namespace Tg.Buttons
 
         public InlineKeyboardButton GetButton()
         {
-            return InlineKeyboardButton.WithCallbackData(text, buttonCallbackData);
+            return InlineKeyboardButton.WithCallbackData(Text, buttonCallbackData);
         }
 
     }

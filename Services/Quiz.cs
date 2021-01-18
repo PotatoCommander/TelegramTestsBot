@@ -1,43 +1,38 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Telegram.Bot;
 using Telegram.Bot.Args;
 using Telegram.Bot.Types;
-using Telegram.Bot.Types.ReplyMarkups;
 using Tg.Buttons;
-using Tg.Services;
 using Tg.Menus;
-using System.IO;
-using System.Linq;
-using Telegram.Bot.Types.InputFiles;
-using Newtonsoft.Json;
+using  Newtonsoft.Json;
 
 namespace Tg.Services
 {
     public class Quiz
     {
-        public string _quizName;
-        internal int result { get; set; } = 0;
-        internal int current = 0;
-
+        private int _result;
         private Menu _menuFrom;
-        public ITelegramBotClient botStarter { get; private set; }
+        private ITelegramBotClient _botStarter;
+        private DisplayBotService _starter;
 
-        private DisplayBotService starter = null;
+        [JsonProperty] internal string QuizName { get; private set; }
+        [JsonProperty] internal string QuizDefinition { get; private set; }
+        [JsonProperty] internal List<Menu> questionMenus { get; private set; }
 
-        public string _quizDefinition;
-        public List<Menu> questionMenus { get; set; }
         public Quiz(string quizName, string quizDefinition, List<Menu> questions)
         {
-            result = 0;
-            _quizName = quizName;
-            _quizDefinition = quizDefinition;
-            questionMenus = new List<Menu>();
-            questionMenus.Add(new Menu(quizDefinition,
-                shortName: quizName,
-                buttons: new List<Button>() { new Button("Начать тест!", null) }));
-            questionMenus.AddRange(questions);
+            _result = 0;
+            QuizName = quizName;
+            QuizDefinition = quizDefinition;
 
+            questionMenus = new List<Menu>
+            {
+                new Menu(quizDefinition,
+                    buttons: new List<Button>() {new Button("Начать тест!", null)})
+            };
+            questionMenus.AddRange(questions);
             var endMenu = new Menu("", buttons: new List<Button>()
             {
                 new Button("к списку!")
@@ -46,58 +41,47 @@ namespace Tg.Services
 
             for (var i = 1; i < questionMenus.Count; i++)
             {
-                foreach (var answer in questionMenus[i - 1].buttons)
+                foreach (var answer in questionMenus[i - 1].Buttons)
                 {
                     answer._menuToDisplay = questionMenus[i];
-                    answer.buttonCallbackData = Guid.NewGuid().ToString();
+                    //answer.buttonCallbackData = Guid.NewGuid().ToString();
                 }
             }
         }
         public void Start(Menu menuFrom, ITelegramBotClient bot, DisplayBotService botService, Chat chat)
         {
-            current = 0;
-            result = 0;
-            botStarter = bot;
+            _result = 0;
+            _botStarter = bot;
             _menuFrom = menuFrom;
-            starter = botService;
-            starter._currentMenu = questionMenus[0];
-            starter._currentMenu.DisplayMenu(chat,bot);
-            bot.OnCallbackQuery -= starter.ButtonOnClick;
+            _starter = botService;
+            _starter._currentMenu = questionMenus[0];
+            _starter._currentMenu.DisplayMenu(chat, bot);
+            bot.OnCallbackQuery -= _starter.ButtonOnClick;
             bot.OnCallbackQuery += QuizButtonClickHandler;
 
-            questionMenus.Last().buttons[0]._menuToDisplay = _menuFrom;
+            questionMenus.Last().Buttons[0]._menuToDisplay = _menuFrom;
 
 
         }
 
         public void QuizButtonClickHandler(object sender, CallbackQueryEventArgs ev)
         {
-            if (starter._currentMenu.Equals(questionMenus.Last())) 
+            if (_starter._currentMenu.Equals(questionMenus.Last()))
             {
-                botStarter.OnCallbackQuery -= QuizButtonClickHandler;
-                botStarter.OnCallbackQuery += starter.ButtonOnClick;
-
-
-                //var endMenu = new Menu("", buttons: new List<Button>()
-                //{
-                //    new Button("к списку!", _menuFrom.menuIdentifier,_menuFrom)
-                //});
-                //starter._currentMenu = endMenu;
-                //endMenu.DisplayMenu(ev.CallbackQuery.Message.Chat, botStarter);
-                //return;
+                _botStarter.OnCallbackQuery -= QuizButtonClickHandler;
+                _botStarter.OnCallbackQuery += _starter.ButtonOnClick;
             }
-            foreach (var answer in starter._currentMenu.buttons )
+            foreach (var answer in _starter._currentMenu.Buttons)
             {
                 if (ev.CallbackQuery.Data == answer.buttonCallbackData)
                 {
-                    result += answer._answerWeight;
+                    _result += answer.AnswerWeight;
                     if (answer._menuToDisplay.Equals(questionMenus.Last()))
                     {
-                        questionMenus.Last().text = $"Конец теста:\n Ваш результат: {result.ToString()}";
+                        questionMenus.Last().Text = $"Конец теста:\n Ваш результат: {_result.ToString()}";
                     }
-                    answer.Execute(ev.CallbackQuery.Message.Chat, botStarter);
-                    starter._currentMenu = answer._menuToDisplay;
-                    current++;
+                    answer.Execute(ev.CallbackQuery.Message.Chat, _botStarter);
+                    _starter._currentMenu = answer._menuToDisplay;
                     break;
                 }
             }

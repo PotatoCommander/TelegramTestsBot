@@ -9,6 +9,8 @@ namespace Tg.Services
     {
         private ITelegramBotClient _bot;
 
+        public string penis { get; }
+
         List<Menu> _allMenus = new List<Menu>();
 
         List<Quiz> _allTests = new List<Quiz>();
@@ -32,20 +34,27 @@ namespace Tg.Services
             }
             _currentMenu = _allMenus[0];
         }
-        public void AddTest(Quiz tests) => _allTests.Add(tests);
+        public void AddTest(List<Quiz> tests)
+        {
+            foreach (var test in tests)
+            {
+                _allTests.Add(test);
+            }
+        }
+
         //creating buttons
         public void ConnectTo(Menu origin, List<Menu> connectTo)
         {
             foreach (var menu in connectTo)
             {
-                origin.AddButton(menu.shortDefinition, menu.menuIdentifier, menu);
-                menu.AddButton("Назад", origin.menuIdentifier, origin);
+                origin.AddButton(menu.ShortDefinition, menu);
+                menu.AddButton("Назад", origin);
             }
         }
 
         public void ButtonOnClick(object sender, CallbackQueryEventArgs ev)
         {
-            var b = _currentMenu.buttons.Find(button => button.buttonCallbackData == ev.CallbackQuery.Data);
+            var b = _currentMenu.Buttons.Find(button => button.buttonCallbackData == ev.CallbackQuery.Data);
             b?.Execute(ev.CallbackQuery.Message.Chat, _bot);
             if (b != null)
             {
@@ -58,7 +67,7 @@ namespace Tg.Services
             var quizNames = new string("");
             for (var i = 0; i < _allTests.Count; i++)
             {
-                quizNames = string.Concat(quizNames, $"{i + 1}: {_allTests[i]._quizName}\n");
+                quizNames = string.Concat(quizNames, $"{i + 1}: {_allTests[i].QuizName}\n");
             }
             return quizNames;
         }
