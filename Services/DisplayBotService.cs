@@ -74,7 +74,7 @@ namespace Tg.Services
 
         public void MessageOnGet(object sender, MessageEventArgs ev)
         {
-            if (ev.Message.Text.ToLowerInvariant() == "/start")
+            if (ev.Message.Text?.ToLowerInvariant() == "/start")
             {
                 _allMenus[0].DisplayMenu(ev.Message.Chat, _bot);
                 _currentMenu = _allMenus[0];

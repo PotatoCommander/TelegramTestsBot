@@ -1,8 +1,7 @@
-﻿using System;
+﻿using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Newtonsoft.Json;
 using Tg.Buttons;
 using Tg.Menus;
 
@@ -20,8 +19,8 @@ namespace Tg.Services
         public string PicUrl { get; set; }
         public List<Answer> Buttons { get; set; }
         public List<Button> GetListOfButtons()
-        {
-            List<Button> list = Buttons.Select(button => new Button(button.Text, weight: button.AnswerWeight)).ToList();
+        { 
+            var list = Buttons.Select(button => new Button(button.Text, weight: button.AnswerWeight)).ToList();
             return list;
         }
     }
@@ -34,10 +33,10 @@ namespace Tg.Services
 
         public List<Menu> GetListOfMenus()
         {
-            List<Menu> list = new List<Menu>();
+            var list = new List<Menu>();
             foreach (var menu in questionMenus)
             {
-                list.Add(new Menu(menu.Text, menu.PicUrl, buttons: menu.GetListOfButtons() ));
+                list.Add(new Menu(menu.Text, menu.PicUrl, buttons: menu.GetListOfButtons()));
             }
 
             return list;
@@ -54,10 +53,10 @@ namespace Tg.Services
         }
         public List<Quiz> ParseJson()
         {
-            List<Quiz> quizzes = new List<Quiz>();
+            var quizzes = new List<Quiz>();
             foreach (var fileName in _jsonFiles)
             {
-                Root deserialized = JsonConvert.DeserializeObject<Root>(File.ReadAllText(fileName));
+                var deserialized = JsonConvert.DeserializeObject<Root>(File.ReadAllText(fileName));
                 quizzes.Add(new Quiz(deserialized.QuizName, deserialized.QuizDefinition, deserialized.GetListOfMenus()));
             }
             return quizzes;
