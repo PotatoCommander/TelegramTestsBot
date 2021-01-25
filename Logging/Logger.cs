@@ -1,19 +1,13 @@
-﻿using System;
-using System.Globalization;
-using System.Linq.Expressions;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Globalization;
+using System.IO;
 using Telegram.Bot.Args;
-using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
-using File = System.IO.File;
 
 namespace Tg.Logging
 {
     public class Logger
     {
-        private string _path;
+        private readonly string _path;
 
         public Logger(string path)
         {
@@ -37,13 +31,14 @@ namespace Tg.Logging
                           $"ChatID: {ev.Update.Message.Chat.Id}";
                     break;
                 case UpdateType.CallbackQuery:
-                    log = $"    When: {ev.Update.CallbackQuery.Message.Date.ToString(CultureInfo.InvariantCulture)}\n " +
-                          $"  From: {ev.Update.CallbackQuery.From.Username} | " +
-                          $"Name: {ev.Update.CallbackQuery.From.FirstName}  " +
-                          $"{ev.Update.CallbackQuery.From.LastName} | " +
-                          $"LANG {ev.Update.CallbackQuery.From.LanguageCode}\n" +
-                          $"Callback data: {ev.Update.CallbackQuery.Data}\n" +
-                          $"ChatID: {ev.Update.CallbackQuery.Message.Chat.Id}";
+                    log =
+                        $"    When: {ev.Update.CallbackQuery.Message.Date.ToString(CultureInfo.InvariantCulture)}\n " +
+                        $"  From: {ev.Update.CallbackQuery.From.Username} | " +
+                        $"Name: {ev.Update.CallbackQuery.From.FirstName}  " +
+                        $"{ev.Update.CallbackQuery.From.LastName} | " +
+                        $"LANG {ev.Update.CallbackQuery.From.LanguageCode}\n" +
+                        $"Callback data: {ev.Update.CallbackQuery.Data}\n" +
+                        $"ChatID: {ev.Update.CallbackQuery.Message.Chat.Id}";
                     break;
                 default:
                     log = $"unhandled update. {ev.Update.Id}";

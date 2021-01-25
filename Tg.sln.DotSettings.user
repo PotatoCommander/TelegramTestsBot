@@ -2,4 +2,13 @@
 	<s:String x:Key="/Default/Environment/AssemblyExplorer/XmlDocument/@EntryValue">&lt;AssemblyExplorer&gt;&#xD;
   &lt;Assembly Path="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\3.1.0\ref\netcoreapp3.1\System.Memory.dll" /&gt;&#xD;
   &lt;Assembly Path="C:\Users\Lenovo\.nuget\packages\telegram.bot\15.7.1\lib\netstandard1.1\Telegram.Bot.dll" /&gt;&#xD;
-&lt;/AssemblyExplorer&gt;</s:String></wpf:ResourceDictionary>
+&lt;/AssemblyExplorer&gt;</s:String>
+	<s:String x:Key="/Default/RunConfigs/Active/@EntryValue">329100C33C22E24199C0247561EA0848</s:String>
+	<s:Boolean x:Key="/Default/RunConfigs/Config/=329100C33C22E24199C0247561EA0848/@KeyIndexDefined">True</s:Boolean>
+	<s:String x:Key="/Default/RunConfigs/Config/=329100C33C22E24199C0247561EA0848/Name/@EntryValue">Tg</s:String>
+	<s:String x:Key="/Default/RunConfigs/Config/=329100C33C22E24199C0247561EA0848/ProjectGuid/@EntryValue">10C5C27420570F4E8162469A058A7D55</s:String>
+	<s:String x:Key="/Default/RunConfigs/Config/=329100C33C22E24199C0247561EA0848/Type/@EntryValue">project</s:String>
+	<s:Boolean x:Key="/Default/RunConfigs/Config/=509DE925CC87DB43B3285CCB69D2F491/@KeyIndexDefined">True</s:Boolean>
+	<s:String x:Key="/Default/RunConfigs/Config/=509DE925CC87DB43B3285CCB69D2F491/Name/@EntryValue">Tg</s:String>
+	<s:String x:Key="/Default/RunConfigs/Config/=509DE925CC87DB43B3285CCB69D2F491/ProjectGuid/@EntryValue">10C5C27420570F4E8162469A058A7D55</s:String>
+	<s:String x:Key="/Default/RunConfigs/Config/=509DE925CC87DB43B3285CCB69D2F491/Type/@EntryValue">project</s:String></wpf:ResourceDictionary>

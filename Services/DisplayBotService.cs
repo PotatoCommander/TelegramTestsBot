@@ -7,17 +7,14 @@ namespace Tg.Services
 {
     public class DisplayBotService
     {
-        private ITelegramBotClient _bot;
+        private readonly List<Menu> _allMenus = new List<Menu>();
 
-        public string penis { get; }
-
-        List<Menu> _allMenus = new List<Menu>();
-
-        List<Quiz> _allTests = new List<Quiz>();
+        private readonly List<Quiz> _allTests = new List<Quiz>();
+        private readonly ITelegramBotClient _bot;
 
         internal Menu _currentMenu;
-        private Menu _previewMenu = null; //need to
         private bool _isStartedQuiz = false;
+        private Menu _previewMenu; //need to
 
         public DisplayBotService(ITelegramBotClient bot)
         {
@@ -28,18 +25,13 @@ namespace Tg.Services
 
         public void AddMenuToService(List<Menu> menus)
         {
-            foreach (var menu in menus)
-            {
-                _allMenus.Add(menu);
-            }
+            foreach (var menu in menus) _allMenus.Add(menu);
             _currentMenu = _allMenus[0];
         }
+
         public void AddTest(List<Quiz> tests)
         {
-            foreach (var test in tests)
-            {
-                _allTests.Add(test);
-            }
+            foreach (var test in tests) _allTests.Add(test);
         }
 
         //creating buttons
@@ -56,19 +48,16 @@ namespace Tg.Services
         {
             var b = _currentMenu.Buttons.Find(button => button.buttonCallbackData == ev.CallbackQuery.Data);
             b?.Execute(ev.CallbackQuery.Message.Chat, _bot);
-            if (b != null)
-            {
-                _previewMenu = _currentMenu;
-                _currentMenu = b._menuToDisplay;
-            }
+            if (b == null) return;
+            _previewMenu = _currentMenu;
+            _currentMenu = b.menuToDisplay;
         }
+
         public string GetQuizzes()
         {
             var quizNames = new string("");
             for (var i = 0; i < _allTests.Count; i++)
-            {
                 quizNames = string.Concat(quizNames, $"{i + 1}: {_allTests[i].QuizName}\n");
-            }
             return quizNames;
         }
 
@@ -90,15 +79,14 @@ namespace Tg.Services
                         _bot.SendTextMessageAsync(ev.Message.Chat.Id,
                             "Неверно ввел сука, давай еще раз").ConfigureAwait(false);
                     else
-                    { _allTests[n].Start(_currentMenu, _bot, this, ev.Message.Chat); }
+                        _allTests[n].Start(_currentMenu, _bot, this, ev.Message.Chat);
                 }
                 else
                 {
                     _bot.SendTextMessageAsync(ev.Message.Chat.Id, "Нужно писать число, шалунишка")
-                       .ConfigureAwait(false);
+                        .ConfigureAwait(false);
                 }
             }
-
         }
     }
 }
