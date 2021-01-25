@@ -16,3 +16,5 @@ C:\Users\Lenovo\source\repos\Tg\obj\Debug\net5.0\Tg.dll
 C:\Users\Lenovo\source\repos\Tg\obj\Debug\net5.0\ref\Tg.dll
 C:\Users\Lenovo\source\repos\Tg\obj\Debug\net5.0\Tg.pdb
 C:\Users\Lenovo\source\repos\Tg\obj\Debug\net5.0\Tg.genruntimeconfig.cache
+C:\Users\Lenovo\source\repos\Tg\bin\Debug\net5.0\NAudio.dll
+C:\Users\Lenovo\source\repos\Tg\bin\Debug\net5.0\System.Resources.Extensions.dll

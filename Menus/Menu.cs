@@ -15,6 +15,7 @@ namespace Tg.Menus
         [JsonProperty] internal string PicUrl { get; set; }
         [JsonProperty] internal List<Button> Buttons { get; set; }
 
+        internal bool isVoiceAnalyzer;
         internal bool isQuizInitiatorPage { get; }
 
         public Menu(string menuText, string pictureUrl = null, string shortName = null,

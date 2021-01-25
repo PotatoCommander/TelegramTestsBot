@@ -2,6 +2,8 @@
 	<s:String x:Key="/Default/Environment/AssemblyExplorer/XmlDocument/@EntryValue">&lt;AssemblyExplorer&gt;&#xD;
   &lt;Assembly Path="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\3.1.0\ref\netcoreapp3.1\System.Memory.dll" /&gt;&#xD;
   &lt;Assembly Path="C:\Users\Lenovo\.nuget\packages\telegram.bot\15.7.1\lib\netstandard1.1\Telegram.Bot.dll" /&gt;&#xD;
+  &lt;Assembly Path="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\5.0.0\ref\net5.0\System.Threading.dll" /&gt;&#xD;
+  &lt;Assembly Path="C:\Program Files\dotnet\shared\Microsoft.NETCore.App\5.0.2\System.Runtime.dll" /&gt;&#xD;
 &lt;/AssemblyExplorer&gt;</s:String>
 	<s:String x:Key="/Default/RunConfigs/Active/@EntryValue">329100C33C22E24199C0247561EA0848</s:String>
 	<s:Boolean x:Key="/Default/RunConfigs/Config/=329100C33C22E24199C0247561EA0848/@KeyIndexDefined">True</s:Boolean>

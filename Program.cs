@@ -31,12 +31,13 @@ namespace Tg
             var testListMenu = new Menu($"Список тестов:\n{botService.GetQuizzes()}  \n Введи номер теста!",
                 shortName: "Тесты",
                 quizInitPage: true);
-            var usefulOptionsMenu = new Menu("Список команд или кнопок хз короче ченить прикручу",
+            var usefulOptionsMenu = new Menu("Дополнительные опции",
                 shortName: "Другие опции");
+            var voiceAnalyzerMenu = new Menu("Запишите голосовое:",shortName: "Распознавание") {isVoiceAnalyzer = true};
 
             botService.AddMenuToService(new List<Menu> {mainMenu, testListMenu, usefulOptionsMenu});
             botService.ConnectTo(mainMenu, new List<Menu> {testListMenu, usefulOptionsMenu});
-
+            botService.ConnectTo(usefulOptionsMenu, new List<Menu>(){voiceAnalyzerMenu});
             var logger = new Logger(logFilePath);
             _bot.OnUpdate += logger.LoggerFileHandler;
 
